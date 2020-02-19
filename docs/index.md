@@ -71,6 +71,7 @@ Mocha is a feature-rich JavaScript test framework running on [Node.js][] and in 
 - [Command-Line Usage](#command-line-usage)
 - [Interfaces](#interfaces)
 - [Reporters](#reporters)
+- [Node.JS native ESM support](#nodejs-native-esm-support)
 - [Running Mocha in the Browser](#running-mocha-in-the-browser)
 - [Desktop Notification Support](#desktop-notification-support)
 - [Configuring Mocha (Node.js)](#configuring-mocha-nodejs)
@@ -869,7 +870,8 @@ Configuration
   --package  Path to package.json for config                            [string]
 
 File Handling
-  --extension          File extension(s) to load           [array] [default: js]
+  --extension          File extension(s) to load
+                                           [array] [default: ["js","cjs","mjs"]]
   --file               Specify file(s) to be loaded prior to root suite
                        execution                       [array] [default: (none)]
   --ignore, --exclude  Ignore file(s) or glob pattern(s)
@@ -1541,7 +1543,9 @@ Alias: `HTML`, `html`
 
 ## Node.JS native ESM support
 
-Mocha supports writing your tests as ES modules (without needing to use the `esm` polyfill module), and not just using CommonJS. For example:
+> _New in v7.1.0_
+
+Mocha supports writing your tests as ES modules, and not just using CommonJS. For example:
 
 ```js
 // test.mjs
@@ -1558,18 +1562,20 @@ this means either ending the file with a `.mjs` extension, or, if you want to us
 adding `"type": "module"` to your `package.json`.
 More information can be found in the [Node.js documentation](https://nodejs.org/api/esm.html).
 
-> Mocha supports ES modules only from Node.js v12.11.0 and above. Also note that
-> to enable this in vesions smaller than 13.2.0, you need to add `--experimental-modules` when running
+> Mocha supports ES modules only from Node.js v12.11.0 and above. To enable this in versions smaller than 13.2.0, you need to add `--experimental-modules` when running
 > Mocha. From version 13.2.0 of Node.js, you can use ES modules without any flags.
 
-### Limitations
+### Current Limitations
 
-- "Watch mode" (i.e. using `--watch` options) does not currently support ES Module test files,
-  although we intend to support it in the future
+Node.JS native ESM support still has status: **Stability: 1 - Experimental**
+
+- [Watch mode](#-watch-w) does not support ES Module test files
 - [Custom reporters](#third-party-reporters) and [custom interfaces](#interfaces)
-  can currently only be CommonJS files, although we intend to support it in the future
-- `mocharc.js` can only be a CommonJS file (can also be called `mocharc.cjs`),
-  although we intend to support ESM in the future
+  can only be CommonJS files
+- [Required modules](#-require-module-r-module) can only be CommonJS files
+- [Configuration file](#configuring-mocha-nodejs) can only be a CommonJS file (`mocharc.js` or `mocharc.cjs`)
+- When using module-level mocks via libs like `proxyquire`, `rewiremock` or `rewire`, hold off on using ES modules for your test files
+- Node.JS native ESM support does not work with [esm][npm-esm] module
 
 ## Running Mocha in the Browser
 
